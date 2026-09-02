@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Penjumlahan Pecahan</title>
+
+    <style>
+        :root {
+            --green-950: #12372a;
+            --green-900: #174d35;
+            --green-700: #2d6a4f;
+            --green-100: #e9f5ee;
+            --green-50: #f5faf7;
+
+            --text: #1f2933;
+            --muted: #6b7280;
+            --border: #dfe6e2;
+            --surface: #ffffff;
+            --background: #f4f7f5;
+
+            --success: #178345;
+            --success-bg: #edf8f1;
+
+            --danger: #c43d3d;
+            --danger-bg: #fff1f1;
+
+            --radius-lg: 22px;
+            --radius-md: 14px;
+            --radius-sm: 9px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family:
+                Inter,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+            color: var(--text);
+            background: var(--background);
+            line-height: 1.5;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .page-header {
+            background: var(--green-950);
+            color: white;
+            padding: 50px 20px 90px;
+        }
+
+        .header-content {
+            max-width: 880px;
+            margin: 0 auto;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #cce4d5;
+            margin-bottom: 15px;
+        }
+
+        .eyebrow-dot {
+            width: 8px;
+            height: 8px;
+            background: #95d5b2;
+            border-radius: 50%;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            max-width: 620px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(36px, 6vw, 58px);
+            line-height: 1.06;
+            letter-spacing: -0.025em;
+            font-weight: 600;
+        }
+
+        .header-description {
+            max-width: 610px;
+            margin-top: 18px;
+            color: #d7e5dc;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .quiz-shell {
+            max-width: 880px;
+            margin: -45px auto 60px;
+            padding: 0 20px;
+        }
+
+        .quiz-summary {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 22px 25px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            margin-bottom: 22px;
+            box-shadow: 0 12px 35px rgba(26, 53, 40, 0.07);
+        }
+
+        .summary-item {
+            padding: 3px 20px;
+            border-right: 1px solid var(--border);
+        }
+
+        .summary-item:first-child {
+            padding-left: 0;
+        }
+
+        .summary-item:last-child {
+            border-right: none;
+        }
+
+        .summary-label {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .summary-value {
+            color: var(--green-950);
+            font-size: 20px;
+            font-weight: 750;
+        }
+
+        .instruction {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            padding: 17px 19px;
+            margin-bottom: 25px;
+            background: var(--green-50);
+            border: 1px solid #d8e9df;
+            border-radius: var(--radius-md);
+        }
+
+        .instruction-icon {
+            flex: 0 0 28px;
+            width: 28px;
+            height: 28px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: var(--green-900);
+            color: white;
+            font-weight: bold;
+            font-family: Georgia, serif;
+        }
+
+        .instruction-text {
+            color: #45534b;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .question-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            margin-bottom: 18px;
+            transition:
+                border-color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .question-card:hover {
+                border-color: #b8cdc0;
+            }
+        }
+
+        .question-card.correct-card {
+            border-color: #a6d6b7;
+            background: #fcfffd;
+        }
+
+        .question-card.wrong-card {
+            border-color: #e8baba;
+            background: #fffdfd;
+        }
+
+        .question-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .question-number {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 650;
+        }
+
+        .number-box {
+            width: 31px;
+            height: 31px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: var(--green-100);
+            color: var(--green-900);
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .question-points {
+            font-size: 13px;
+            color: var(--green-700);
+            font-weight: 700;
+        }
+
+        .math-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            min-height: 85px;
+        }
+
+        .math-fraction,
+        .answer-fraction {
+            display: inline-grid;
+            grid-template-rows: 1fr 2px 1fr;
+            align-items: center;
+            justify-items: center;
+            min-width: 54px;
+        }
+
+        .math-fraction {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 27px;
+        }
+
+        .fraction-bar {
+            width: 100%;
+            min-width: 42px;
+            height: 2px;
+            background: currentColor;
+        }
+
+        .operator {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 29px;
+            color: #47524c;
+        }
+
+        .equal {
+            margin-left: 3px;
+        }
+
+        .answer-fraction {
+            width: 76px;
+            gap: 5px;
+        }
+
+        .answer-fraction input {
+            width: 76px;
+            height: 43px;
+            border: 1.5px solid #c9d2cd;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 18px;
+            font-weight: 650;
+            color: var(--green-950);
+            background: white;
+            outline: none;
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .answer-fraction input:focus {
+            border-color: var(--green-700);
+            box-shadow: 0 0 0 4px rgba(45, 106, 79, 0.12);
+        }
+
+        .answer-fraction input:disabled {
+            background: #f6f7f6;
+            color: #58635d;
+        }
+
+        .answer-bar {
+            width: 61px;
+            height: 2px;
+            background: #34423a;
+        }
+
+        .feedback {
+            display: none;
+            margin-top: 22px;
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            font-size: 14px;
+        }
+
+        .feedback.visible {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+        }
+
+        .feedback.correct {
+            background: var(--success-bg);
+            color: #146b3a;
+        }
+
+        .feedback.wrong {
+            background: var(--danger-bg);
+            color: #9c3333;
+        }
+
+        .feedback-symbol {
+            font-weight: 900;
+            font-size: 17px;
+            line-height: 1.3;
+        }
+
+        .feedback-title {
+            display: block;
+            font-weight: 750;
+            margin-bottom: 2px;
+        }
+
+        .action-panel {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding-top: 12px;
+        }
+
+        .action-copy {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .primary-button {
+            border: none;
+            min-height: 50px;
+            padding: 0 25px;
+            background: var(--green-900);
+            color: white;
+            border-radius: 12px;
+            font-weight: 750;
+            transition:
+                background 0.2s ease,
+                transform 0.15s ease;
+        }
+
+        .primary-button:hover {
+            background: var(--green-950);
+        }
+
+        .primary-button:active {
+            transform: translateY(1px);
+        }
+
+        .primary-button:focus-visible,
+        .secondary-button:focus-visible {
+            outline: 3px solid rgba(45, 106, 79, 0.3);
+            outline-offset: 3px;
+        }
+
+        .result-panel {
+            display: none;
+            margin-top: 28px;
+            overflow: hidden;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+        }
+
+        .result-panel.visible {
+            display: block;
+        }
+
+        .result-header {
+            padding: 35px;
+            background: var(--green-950);
+            color: white;
+        }
+
+        .result-overline {
+            color: #bcd8c7;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            font-size: 12px;
+            font-weight: 750;
+        }
+
+        .result-score-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 25px;
+            margin-top: 12px;
+        }
+
+        .score-main {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(58px, 10vw, 86px);
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+        }
+
+        .score-max {
+            font-family: Inter, Arial, sans-serif;
+            font-size: 22px;
+            color: #bdd7c7;
+            font-weight: 500;
+            letter-spacing: 0;
+        }
+
+        .score-message {
+            text-align: right;
+            color: #dceae1;
+            max-width: 270px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .result-body {
+            padding: 27px 35px 32px;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 25px;
+            margin-bottom: 25px;
+        }
+
+        .result-stat + .result-stat {
+            border-left: 1px solid var(--border);
+            padding-left: 25px;
+        }
+
+        .result-stat-label {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .result-stat-value {
+            font-size: 22px;
+            font-weight: 780;
+            color: var(--green-950);
+        }
+
+        .secondary-button {
+            min-height: 48px;
+            border: 1.5px solid var(--green-900);
+            background: transparent;
+            color: var(--green-900);
+            border-radius: 11px;
+            padding: 0 20px;
+            font-weight: 750;
+        }
+
+        .secondary-button:hover {
+            background: var(--green-50);
+        }
+
+        .result-action {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        @media (max-width: 600px) {
+            .page-header {
+                padding: 38px 20px 77px;
+            }
+
+            .quiz-shell {
+                margin-top: -38px;
+                padding: 0 14px;
+            }
+
+            .quiz-summary {
+                padding: 18px 8px;
+            }
+
+            .summary-item {
+                padding: 2px 10px;
+            }
+
+            .summary-label {
+                font-size: 11px;
+            }
+
+            .summary-value {
+                font-size: 16px;
+            }
+
+            .question-card {
+                padding: 21px 18px;
+                border-radius: 17px;
+            }
+
+            .math-row {
+                gap: 11px;
+            }
+
+            .math-fraction {
+                font-size: 24px;
+                min-width: 44px;
+            }
+
+            .operator {
+                font-size: 25px;
+            }
+
+            .answer-fraction,
+            .answer-fraction input {
+                width: 68px;
+            }
+
+            .answer-fraction input {
+                height: 42px;
+            }
+
+            .action-panel {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .action-copy {
+                text-align: center;
+            }
+
+            .primary-button {
+                width: 100%;
+            }
+
+            .result-header,
+            .result-body {
+                padding: 26px 22px;
+            }
+
+            .result-score-row {
+                display: block;
+            }
+
+            .score-message {
+                text-align: left;
+                margin-top: 17px;
+            }
+
+            .result-action .secondary-button {
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="page-header">
+    <div class="header-content">
+
+        <div class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            Latihan Matematika
+        </div>
+
+        <h1>
+            Kuis Penjumlahan Pecahan
+        </h1>
+
+        <p class="header-description">
+            Latih kemampuan menyamakan penyebut dengan KPK,
+            menjumlahkan pecahan, dan menyederhanakan hasil akhirnya.
+        </p>
+
+    </div>
+</header>
+
+
+<main class="quiz-shell">
+
+    <section class="quiz-summary">
+
+        <div class="summary-item">
+            <div class="summary-label">
+                Jumlah soal
+            </div>
+            <div class="summary-value">
+                10 soal
+            </div>
+        </div>
+
+        <div class="summary-item">
+            <div class="summary-label">
+                Poin / soal
+            </div>
+            <div class="summary-value">
+                10 poin
+            </div>
+        </div>
+
+        <div class="summary-item">
+            <div class="summary-label">
+                Nilai maksimal
+            </div>
+            <div class="summary-value">
+                100
+            </div>
+        </div>
+
+    </section>
+
+
+    <section class="instruction">
+
+        <div class="instruction-icon">
+            i
+        </div>
+
+        <div class="instruction-text">
+            Isi pembilang dan penyebut pada setiap jawaban.
+            Gunakan bentuk pecahan yang <strong>paling sederhana</strong>.
+            Jawaban yang masih dapat disederhanakan dianggap belum tepat.
+        </div>
+
+    </section>
+
+
+    <div id="quiz"></div>
+
+
+    <div class="action-panel" id="actionPanel">
+
+        <div class="action-copy">
+            Pastikan semua soal sudah dijawab sebelum melihat nilai.
+        </div>
+
+        <button
+            class="primary-button"
+            id="submitButton"
+            type="button">
+            Selesai & Lihat Nilai
+        </button>
+
+    </div>
+
+
+    <section
+        class="result-panel"
+        id="result"
+        aria-live="polite">
+
+        <div class="result-header">
+
+            <div class="result-overline">
+                Hasil Kuis
+            </div>
+
+            <div class="result-score-row">
+
+                <div class="score-main">
+                    <span id="score">0</span>
+                    <span class="score-max">/ 100</span>
+                </div>
+
+                <div
+                    class="score-message"
+                    id="scoreMessage">
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="result-body">
+
+            <div class="result-stats">
+
+                <div class="result-stat">
+                    <div class="result-stat-label">
+                        Jawaban benar
+                    </div>
+
+                    <div
+                        class="result-stat-value"
+                        id="correctStat">
+                        0 dari 10
+                    </div>
+                </div>
+
+                <div class="result-stat">
+                    <div class="result-stat-label">
+                        Total poin
+                    </div>
+
+                    <div
+                        class="result-stat-value"
+                        id="pointStat">
+                        0 poin
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="result-action">
+
+                <button
+                    class="secondary-button"
+                    id="newQuizButton"
+                    type="button">
+                    Mulai Kuis Baru
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+const allQuestions = [
+
+    [3,5,2,3],
+    [5,6,1,4],
+    [3,8,5,6],
+    [4,9,5,6],
+    [3,10,5,6],
+    [5,12,3,8],
+    [7,10,5,12],
+    [5,9,7,12],
+    [7,8,5,12],
+    [7,15,5,6],
+
+    [2,7,3,5],
+    [5,8,2,3],
+    [4,7,5,6],
+    [3,10,7,15],
+    [5,12,7,9],
+    [7,18,5,12],
+    [3,14,5,7],
+    [7,20,3,8],
+    [5,16,7,12],
+    [8,15,3,10],
+
+    [7,9,5,12],
+    [11,15,2,9],
+    [5,18,7,12],
+    [7,16,3,10],
+    [9,14,5,21],
+    [11,20,3,8],
+    [7,15,11,18],
+    [5,24,7,16],
+    [13,18,5,12],
+    [11,21,5,14]
+
+];
+
+
+let currentQuestions = [];
+
+
+function gcd(a, b) {
+
+    while (b !== 0) {
+
+        const temp = b;
+
+        b = a % b;
+        a = temp;
+
+    }
+
+    return Math.abs(a);
+}
+
+
+function getAnswer(question) {
+
+    const [a, b, c, d] = question;
+
+    let numerator =
+        (a * d) + (c * b);
+
+    let denominator =
+        b * d;
+
+    const divisor =
+        gcd(numerator, denominator);
+
+    numerator /= divisor;
+    denominator /= divisor;
+
+    return {
+        numerator,
+        denominator
+    };
+
+}
+
+
+function shuffle(array) {
+
+    const copy =
+        [...array];
+
+    for (
+        let i = copy.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
+
+        [
+            copy[i],
+            copy[j]
+        ] = [
+            copy[j],
+            copy[i]
+        ];
+
+    }
+
+    return copy;
+}
+
+
+function fractionHTML(
+    numerator,
+    denominator
+) {
+
+    return `
+        <span class="math-fraction">
+
+            <span>
+                ${numerator}
+            </span>
+
+            <span class="fraction-bar">
+            </span>
+
+            <span>
+                ${denominator}
+            </span>
+
+        </span>
+    `;
+
+}
+
+
+function startQuiz() {
+
+    currentQuestions =
+        shuffle(allQuestions)
+        .slice(0, 10);
+
+    const quiz =
+        document.getElementById("quiz");
+
+    quiz.innerHTML = "";
+
+
+    currentQuestions.forEach(
+        (question, index) => {
+
+            const [a, b, c, d] =
+                question;
+
+            quiz.insertAdjacentHTML(
+                "beforeend",
+                `
+                <article
+                    class="question-card"
+                    id="card-${index}">
+
+                    <div class="question-top">
+
+                        <div class="question-number">
+
+                            <span class="number-box">
+                                ${index + 1}
+                            </span>
+
+                            Soal ${index + 1}
+                            dari 10
+
+                        </div>
+
+                        <div class="question-points">
+                            10 poin
+                        </div>
+
+                    </div>
+
+
+                    <div class="math-row">
+
+                        ${fractionHTML(a, b)}
+
+                        <span
+                            class="operator"
+                            aria-hidden="true">
+                            +
+                        </span>
+
+                        ${fractionHTML(c, d)}
+
+                        <span
+                            class="operator equal"
+                            aria-hidden="true">
+                            =
+                        </span>
+
+
+                        <div
+                            class="answer-fraction"
+                            aria-label="Jawaban pecahan">
+
+                            <input
+                                type="number"
+                                inputmode="numeric"
+                                id="num-${index}"
+                                aria-label="
+                                Pembilang jawaban
+                                soal ${index + 1}"
+                                autocomplete="off">
+
+                            <div class="answer-bar">
+                            </div>
+
+                            <input
+                                type="number"
+                                inputmode="numeric"
+                                min="1"
+                                id="den-${index}"
+                                aria-label="
+                                Penyebut jawaban
+                                soal ${index + 1}"
+                                autocomplete="off">
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="feedback"
+                        id="feedback-${index}">
+                    </div>
+
+                </article>
+                `
+            );
+
+        }
+    );
+
+
+    document
+        .getElementById("result")
+        .classList
+        .remove("visible");
+
+
+    document
+        .getElementById("actionPanel")
+        .style.display = "flex";
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+function scoreMessage(score) {
+
+    if (score === 100) {
+
+        return `
+            Sempurna. Semua jawaban
+            sudah tepat dan disederhanakan.
+        `;
+
+    }
+
+    if (score >= 80) {
+
+        return `
+            Sangat baik. Cek kembali
+            beberapa soal yang masih
+            belum tepat.
+        `;
+
+    }
+
+    if (score >= 60) {
+
+        return `
+            Cukup baik. Perhatikan lagi
+            proses mencari KPK dan
+            menyederhanakan pecahan.
+        `;
+
+    }
+
+    return `
+        Tetap berlatih. Tinjau kembali
+        penyamaan penyebut dan
+        penyederhanaan hasil akhir.
+    `;
+
+}
+
+
+function checkAnswers() {
+
+    let correctCount = 0;
+
+
+    currentQuestions.forEach(
+        (question, index) => {
+
+            const answer =
+                getAnswer(question);
+
+
+            const numInput =
+                document.getElementById(
+                    `num-${index}`
+                );
+
+
+            const denInput =
+                document.getElementById(
+                    `den-${index}`
+                );
+
+
+            const userNum =
+                Number(
+                    numInput.value
+                );
+
+
+            const userDen =
+                Number(
+                    denInput.value
+                );
+
+
+            const feedback =
+                document.getElementById(
+                    `feedback-${index}`
+                );
+
+
+            const card =
+                document.getElementById(
+                    `card-${index}`
+                );
+
+
+            const isCorrect =
+                numInput.value !== "" &&
+                denInput.value !== "" &&
+                userNum === answer.numerator &&
+                userDen === answer.denominator;
+
+
+            numInput.disabled = true;
+            denInput.disabled = true;
+
+
+            if (isCorrect) {
+
+                correctCount++;
+
+                card.classList.add(
+                    "correct-card"
+                );
+
+                feedback.className =
+                    "feedback visible correct";
+
+
+                feedback.innerHTML = `
+                    <span
+                        class="feedback-symbol">
+                        ✓
+                    </span>
+
+                    <div>
+
+                        <span
+                            class="feedback-title">
+                            Jawaban benar
+                        </span>
+
+                        Pecahan sudah dalam
+                        bentuk paling sederhana.
+
+                    </div>
+                `;
+
+            } else {
+
+                card.classList.add(
+                    "wrong-card"
+                );
+
+                feedback.className =
+                    "feedback visible wrong";
+
+
+                feedback.innerHTML = `
+                    <span
+                        class="feedback-symbol">
+                        ×
+                    </span>
+
+                    <div>
+
+                        <span
+                            class="feedback-title">
+                            Belum tepat
+                        </span>
+
+                        Jawaban yang benar adalah
+
+                        <strong>
+                            ${answer.numerator}/${answer.denominator}
+                        </strong>.
+
+                    </div>
+                `;
+
+            }
+
+        }
+    );
+
+
+    const score =
+        correctCount * 10;
+
+
+    document
+        .getElementById("score")
+        .textContent = score;
+
+
+    document
+        .getElementById("correctStat")
+        .textContent =
+        `${correctCount} dari 10`;
+
+
+    document
+        .getElementById("pointStat")
+        .textContent =
+        `${score} poin`;
+
+
+    document
+        .getElementById("scoreMessage")
+        .textContent =
+        scoreMessage(score);
+
+
+    document
+        .getElementById("actionPanel")
+        .style.display = "none";
+
+
+    const result =
+        document.getElementById("result");
+
+
+    result.classList.add("visible");
+
+
+    result.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+}
+
+
+document
+    .getElementById("submitButton")
+    .addEventListener(
+        "click",
+        checkAnswers
+    );
+
+
+document
+    .getElementById("newQuizButton")
+    .addEventListener(
+        "click",
+        startQuiz
+    );
+
+
+startQuiz();
+
+</script>
+
+</body>
+</html>
